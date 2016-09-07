@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     使用Cargo来像中间件部署Java 制品                                                       
+     固定指令：
+     - clean 
+     - compile
+     - test
+     - package
+                   
+     @author lxb
+     ====================================================================== -->
+<project name="cargo-tools" default="default">
+  <description>
+    中间件统一部署
+    </description>
+
+  <taskdef resource="cargo.tasks">
+    <classpath>
+      <pathelement location="target/dependency/cargo-core-uberjar-1.6.8.jar" />
+      <pathelement location="target/dependency/cargo-ant-1.6.8.jar" />
+    </classpath>
+  </taskdef>
+
+  <target name="default">
+    <echo>clean:
+compile:
+package:
+        </echo>
+
+  </target>
+
+  <property name="tomcat.home" value="/usr/local/Cellar/tomcat/8.0.17/libexec" />
+  <property name="tomcatlog.dir" value="target/tomcat/logs" />
+  <property name="tomcatconfig.dir" value="target/tomcat/conf" />
+  <property name="mywarfile" value="target/maven-war-0.0.1-SNAPSHOT.war" />
+
+  <target name="run">
+    <delete dir="${tomcatconfig.dir}" />
+    <mkdir dir="${tomcatlog.dir}" />
+    <mkdir dir="${tomcatconfig.dir}" />
+    <echo message="Starting Cargo..." />
+    <echo message="Using tomcat.home = ${tomcat.home} " />
+    <echo message="Using war = ${mywarfile} " />
+    <cargo action="run" containerId="tomcat8x" home="${tomcat.home}" output="${tomcatlog.dir}/output.log" log="${tomcatlog.dir}/cargo.log">
+      <configuration home="${tomcatconfig.dir}">
+        <property name="cargo.servlet.port" value="9999" />
+        <property name="cargo.logging" value="high" />
+        <deployable type="war" file="${mywarfile}">
+          <property name="context" value="/" />
+        </deployable>
+      </configuration>
+    </cargo>
+  </target>
+  <target name="deploy">
+    <!-- 直接复制部署 -->
+    <echo message="Using war = ${mywarfile} " />
+    <cargo action="deploy" containerId="tomcat8x" type="installed" home="${tomcat.home}">
+      <configuration type="existing" home="${tomcat.home}">
+        <deployable type="war" file="${mywarfile}">
+          <property name="context" value="/" />
+        </deployable>
+      </configuration>
+    </cargo>
+  </target>
+  <target name="redeploy">
+    <!--通过WEB API部署 -->
+    <echo message="Using war = ${mywarfile} " />
+    <cargo action="redeploy" containerId="tomcat8x" type="remote">
+      <configuration type="runtime">
+        <property name="cargo.hostname" value="localhost" />
+        <property name="cargo.servlet.port" value="8080" />
+        <property name="cargo.remote.username" value="asadmin" />
+        <property name="cargo.remote.password" value="asadmin" />
+        <deployable type="war" file="${mywarfile}">
+          <property name="context" value="/" />
+        </deployable>
+      </configuration>
+    </cargo>
+  </target>
+</project>

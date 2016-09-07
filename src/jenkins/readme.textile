@@ -1,0 +1,30 @@
+h1. jenkins 脚本
+
+
+在 @Manage Jenkins/Script Console@ 里面执行
+
+h2. 功能目录
+
+|_. 文件 |_. 功能 |
+| clear _old_ builds.groovy | 集中清理老旧build，在控制台执行  |
+| export_change_log.groovy  | 导出当前build的changelog，需要在job中执行 |
+
+
+
+控制台执行
+
+访问jenkins界面，导航到 @Manage Jenkins/Script Console@ ，将脚本粘贴到文本框里面点击运行
+
+h2. 用法
+
+1. 将脚本粘贴到 script console 里面执行
+2. 创建pipeline job，将脚本粘贴到pipeline script框里作为job执行
+
+例如：
+stage("clean build history"){
+  //粘贴在此处
+}
+
+h2. 说明
+
+@jenkins.*, jenkins.model.*, hudson.*, and hudson.model.*@ 这些jenkins是做了预先导入的，但是在脚本里面为了代码提示方便又做了import，在粘贴的时候可以忽略。

@@ -1,0 +1,68 @@
+
+= 搭建制品库
+
+企业需要有可以统一协调管理的软件制品存储库。
+
+= 特征
+
+
+== 模块依赖
+
+软件规模越大，之间分散协作越多，互相之间需要二进制制品的依赖。JAR、SO、AAR、DLL、莫不如此。
+
+== 归档
+
+存入制品库的只读副本可以保证历史版本可追溯。
+
+== 分发
+
+移动应用平台的制品可以供测试分发，像APK，iOS等的二进制包
+
+== 部署用途
+
+docker镜像，可供运维部署
+
+== 网络加速
+
+绝大多数开发过程中用到的library依赖都已经设计成直接从网络下载。收到地域限制，有的网络慢的可以使用本地库加速build 过程。
+
+maven、npm、docker、gem、pipy
+
+
+= 使用sonatype nexus 搭建制品库
+
+nexus 3版已经可以支持众多的制品存储
+
+bower
+docker
+maven
+npm
+nuget
+pypi
+raw
+rubygem
+yum
+
+== docker repo
+
+在后台设置好docker的repo和单独的端口，比如端口是9999，ip是192.168.99.1
+
+使用http测试
+在 docker service的profile EXTRA_ARGS里面设置
+
+[source, ini]
+----
+--insecure-registry 192.168.99.1:9999
+----
+
+尝试push一个image
+
+[source, shell]
+----
+docker tag hello:latest 192.168.99.1:9999/hello:latest
+docker push 192.168.99.1:9999/hello:latest
+docker run 192.168.99.1/hello:latest
+----
+
+https://help.sonatype.com/display/NXRM3/Private+Registry+for+Docker#PrivateRegistryforDocker-AccessingRepositories
+http://localhost:8081/repository/docker-private/

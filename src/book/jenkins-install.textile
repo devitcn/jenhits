@@ -1,0 +1,19 @@
+h1. 安装注意事项
+
+h2. JDK1.8
+
+安装途径
+
+|                | 优势 | 劣势 |
+| 包管理器（yum,apt）       | 能自启动 | 不能自动升级 |
+| 下载war包      | 能够自动升级 | 不能自启动 |
+ 
+h2. 离线安装插件
+
+使用插件镜像站点可以在没有外网的环境中安装插件：
+
+https://github.com/lxbzmy/plantuml-demo 
+ 
+h2. 使用delivery pipeline 插件时，需要修改启动脚本
+ 
+bc..  dest=/etc/sysconfig/jenkins regexp=JENKINS_JAVA_OPTIONS line="JENKINS_JAVA_OPTIONS=\"-Djava.awt.headless=true -Dhudson.model.ParametersAction.safeParameters=PIPELINE_VERSION -Dhudson.model.ParametersAction.keepUnfinedParameters=true\""

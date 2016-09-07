@@ -1,0 +1,62 @@
+h1. Cargo 可以统一 Java 中间件部署方法
+
+网址： https://codehaus-cargo.github.io/cargo/Installation.html
+
+使用依赖：
+
+* Java6
+* Ant 1.5.4 or greater
+* Commons discovery 0.5 or greater
+* Commons logging 1.1.1 or greater
+
+In addition, some specific containers (for example, JRun) and some deployables (for example, Tomcat WARs) require the following:
+
+* jdom 1.1.3 (not any jdom2 version)
+* jaxen 1.1.6 or greater
+
+下载单个包
+
+bc. mvn dependency:copy -Dartifact=org.codehaus.cargo:cargo-core-uberjar:1.6.8
+mvn dependency:copy -Dartifact=org.codehaus.cargo:cargo-ant:1.6.8
+
+连通依赖一起下载(已经在POM中配置好)：
+
+bc. mvn dependency:copy-dependencies
+cd target
+wget http://mirrors.shu.edu.cn/apache/ant/binaries/apache-ant-1.9.13-bin.tar.gz
+tar xf apache-ant-1.9.13-bin.tar.gz
+cd dependency
+cp cargo-ant-1.6.8.jar cargo-core-uberjar-1.6.8.jar commons-discovery-0.5.jar commons-logging-1.1.1.jar ../apache-ant-1.9.13/lib/
+
+h2. 概念解释
+
+h3. containerId 是指cargo预先定义的容器类别
+
+可以在各个中间件参数说明页的“Container Instantiation”一项中找到，常规是小写附加大版本号的形式，例如：
+
+- tomcat8x
+- tomcat5x
+- geronimo1x
+
+h3. container type 和 configuration type
+
+ container type 和 configuration type似乎有些含义重复，需要重点解释：（另外文档好像有错误，写的是containerType但是ant里面是type）
+
+| container type | desc |
+| installed | 指和cargo安装在同一个操作系统中的，可以操作配置文件和部署目录（local container），支持程度最好 |
+| embedded | 指和carg在一个JVM中启动，可以直接通过Java api 操作 |
+| remote   | 和cargo不在一个系统里，只能通过WEB API访问 |
+
+| configuration type | desc |
+| "standalone":https://codehaus-cargo.github.io/cargo/Standalone+Local+Configuration.html | 独立、纯净、cargo会设置一套纯净的中间件环境（删除旧配置，生成新配置）  |
+| existing   | 复用已经设置好的中间件（<cargo type="installed" >） |
+| runtime    | 只通过API（WEB、JMX）访问中间件（黑盒），支持范围小 |
+
+
+参数搭配举例
+
+|_. container id |_. type |_. Configuration type |_. desc |
+|/4 tomcat8x     |  embedded | 默认（standalone）| 单独启动一个干净的tomcat，搭配start模式，适用于单元测试|
+                 | installed | standalone        | 单独启动一个干净的tomcat，搭配run模式，适用于手工自测  |
+                 | installed | existing          | 使用已有的中间件配置，搭配redeploy模式，适用于发布SIT  |
+                 | remote    | runtime           | 远程部署，适用发布SIT，部分中间件不支持                |
