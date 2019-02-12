@@ -1,0 +1,85 @@
+<project name="镜像eclipse-update-site" default="run">
+	<target name="run" depends="tools" />
+	<target name="editors">
+		<p2.mirror ignoreerrors="on" raw="off" verbose="on">
+			<source>
+				<repository location="http://zipeditor.sourceforge.net/update" />
+				<repository location="https://dl.bintray.com/de-jcup/jenkinseditor" />
+				<repository location="https://cucumber.io/cucumber-eclipse/update-site" />
+				<repository location="https://dl.bintray.com/de-jcup/asciidoctoreditor" />
+			</source>
+			<repository location="file://${basedir}/editors" name="editors" />
+			<slicingoptions latestversiononly="yes" />
+		</p2.mirror>
+	</target>
+	<target name="tools">
+		<p2.mirror ignoreerrors="on" raw="off" verbose="on">
+			<source>
+				<repository location="https://spotbugs.github.io/eclipse" />
+				<repository location="https://ecd-plugin.github.io/update/" />
+				<repository location="https://moreunit.github.io/eclipse-update-site" />
+				<repository location="http://andrei.gmxhome.de/eclipse/" />
+				<repository location="http://dist.springsource.org/release/GRECLIPSE/e4.10" />
+			</source>
+			<repository location="file://${basedir}/tools" name="tools" />
+			<slicingoptions latestversiononly="yes" />
+		</p2.mirror>
+	</target>
+	<target name="spring">
+		<p2.mirror raw="off" verbose="on">
+			<source>
+				<repository location=" http://download.springsource.com/release/TOOLS/sts4/update/e4.10/" />
+			</source>
+			<repository location="file://${basedir}/spring-4.10" name="spring-ide-4.10" />
+			<slicingoptions latestversiononly="yes" />
+		</p2.mirror>
+	</target>
+	<target name="m2e-tools">
+		<p2.mirror raw="off" verbose="on">
+      m2e 的插件有一部分放在了 maven central 上面
+      http://repo1.maven.org/maven2/.m2e/
+      <source>
+				<repository location="http://repo1.maven.org/maven2/.m2e/connectors/m2eclipse-egit/0.15.1/N/LATEST/" />
+				<repository location="http://repo1.maven.org/maven2/.m2e/connectors/m2eclipse-tycho/0.8.1/N/LATEST/" />
+				<repository location="http://repo1.maven.org/maven2/.m2e/connectors/m2eclipse-tycho/0.9.0/N/LATEST/" />
+				<repository location="https://github.com/levigo/gwt-m2e/raw/master/updateSite/" />
+			</source>
+			<repository location="file://${basedir}/m2-tools" name="m2-tools" />
+			<slicingoptions latestversiononly="yes" />
+		</p2.mirror>
+	</target>
+	<target name="server-tools">
+		<p2.mirror raw="off" verbose="on" includepacked="false" ignoreerrors="">
+			<source >
+				<repository location="http://download.oracle.com/otn_software/oepe/12.2.1.8/oxygen/repository/" />
+				<!--600M space -->
+				<!--repository location="http://download.jboss.org/jbosstools/photon/stable/updates/" /-->
+			</source>
+			<comparator>
+				<exclude>
+					<artifact><property name="format" value="packed" /></artifact>
+				</exclude>
+			</comparator>
+			<repository location="file://${basedir}/server-tools" name="server-tools" />
+			<slicingoptions latestversiononly="yes" />
+		</p2.mirror>
+	</target>
+	<target name="oomph">
+		<p2.mirror raw="off" verbose="on">
+			<source>
+				<repository location="http://download.eclipse.org/oomph/updates" />
+			</source>
+			<repository location="file://${basedir}/oomph" name="oomph" />
+			<slicingoptions latestversiononly="yes" />
+		</p2.mirror>
+	</target>
+	<target name="2018-12">
+		<p2.mirror raw="off" verbose="on">
+			<source>
+				<repository location="http://download.eclipse.org/releases/2018-12/" />
+			</source>
+			<repository location="file://${basedir}/2018-12" name="eclipse-2018-12" />
+			<slicingoptions latestversiononly="yes" />
+		</p2.mirror>
+	</target>
+</project>
